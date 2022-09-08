@@ -50,6 +50,7 @@ main:
 user_input_loop:
 	# load the current character into $t1
 	lb $t1, user_input($t0)
+	# exit the loop before a newline character is printed
 	beq $t1, 10, user_input_loop_end
 
 	# print the current character
@@ -62,12 +63,8 @@ user_input_loop:
 	j user_input_loop
 user_input_loop_end:
 
-	# print new line
-	li $v0, 4
-	la $a0, nl
-	syscall
-
 	# print greeting2
+	li $v0, 4
 	la $a0, greeting2
 	syscall
 
@@ -112,10 +109,6 @@ user_input_upper_loop_not_lowercase:
 	addi $t0, $t0, 1
 	j user_input_upper_loop
 user_input_upper_loop_end:
-	# print new line
-	li $v0, 4
-	la $a0, nl
-	syscall
 
 	# print lower_label
 	li $v0, 4
@@ -149,11 +142,6 @@ user_input_lower_loop_not_uppercase:
 	addi $t0, $t0, 1
 	j user_input_lower_loop
 user_input_lower_loop_end:
-	# print new line
-	li $v0, 4
-	la $a0, nl
-	syscall
-
 
 	li $v0, 10 #exit the program 
 	syscall
