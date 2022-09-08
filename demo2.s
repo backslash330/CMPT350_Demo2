@@ -33,32 +33,127 @@ main:
 	la $a0, instructions
 	syscall
 
-	# print newline
-	la $a0, nl
-	syscall
-
 	# read user input into user_input
 	li $v0, 8
 	la $a0, user_input
 	li $a1, 65
 	syscall
 
-	# print newline
-	li $v0, 4
-	la $a0, nl
-	syscall
-
 	# print greeting1
+	li $v0, 4
 	la $a0, greeting1
 	syscall
 
-	# print user_input
-	la $a0, user_input
+	# loop through and print user_input as chars up to the first newline character
+	# $t0 is used as a counter
+	li $t0, 0
+user_input_loop:
+	# load the current character into $t1
+	lb $t1, user_input($t0)
+	beq $t1, 10, user_input_loop_end
+
+	# print the current character
+	li $v0, 11
+	move $a0, $t1
+	syscall
+
+	# increment the counter
+	addi $t0, $t0, 1
+	j user_input_loop
+user_input_loop_end:
+
+	# print new line
+	li $v0, 4
+	la $a0, nl
 	syscall
 
 	# print greeting2
 	la $a0, greeting2
 	syscall
+
+	# print new line
+	li $v0, 4
+	la $a0, nl
+	syscall
+
+	# print upper_label
+	li $v0, 4
+	la $a0, upper_label
+	syscall
+
+	# loop through user_input and print each character in uppercase
+	# $t0 is used as a counter
+	li $t0, 0
+user_input_upper_loop:
+	# load the current character into $t1
+	lb $t1, user_input($t0)
+	beq $t1, 0, user_input_upper_loop_end #exit at the end of the string
+
+	# check if the character is lowercase
+	# if the character is lowercase, subtract 32 to make it uppercase
+	# if the character is uppercase, do nothing
+
+	# check if the character is lowercase
+	# if the character is lowercase, subtract 32 to make it uppercase
+	# if the character is uppercase, do nothing
+	li $t2, 97
+	blt $t1, $t2, user_input_upper_loop_not_lowercase
+	li $t2, 122
+	bgt $t1, $t2, user_input_upper_loop_not_lowercase
+	sub $t1, $t1, 32
+
+user_input_upper_loop_not_lowercase:
+	# print the current character
+	li $v0, 11
+	move $a0, $t1
+	syscall
+
+	# increment the counter
+	addi $t0, $t0, 1
+	j user_input_upper_loop
+user_input_upper_loop_end:
+	# print new line
+	li $v0, 4
+	la $a0, nl
+	syscall
+
+	# print lower_label
+	li $v0, 4
+	la $a0, lower_label
+	syscall
+
+	# loop through user_input and print each character in lowercase
+	# $t0 is used as a counter
+	li $t0, 0
+user_input_lower_loop:
+	# load the current character into $t1
+	lb $t1, user_input($t0)
+	beq $t1, 0, user_input_lower_loop_end #exit at the end of the string
+
+	# check if the character is uppercase
+	# if the character is uppercase, add 32 to make it lowercase
+	# if the character is lowercase, do nothing
+	li $t2, 65
+	blt $t1, $t2, user_input_lower_loop_not_uppercase
+	li $t2, 90
+	bgt $t1, $t2, user_input_lower_loop_not_uppercase
+	add $t1, $t1, 32
+
+user_input_lower_loop_not_uppercase:
+	# print the current character
+	li $v0, 11
+	move $a0, $t1
+	syscall
+
+	# increment the counter
+	addi $t0, $t0, 1
+	j user_input_lower_loop
+user_input_lower_loop_end:
+	# print new line
+	li $v0, 4
+	la $a0, nl
+	syscall
+
 
 	li $v0, 10 #exit the program 
 	syscall
